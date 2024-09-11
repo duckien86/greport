@@ -1,0 +1,99 @@
+definitions:
+  usermodel.UserCreateReq:
+    properties:
+      first_name:
+        example: Van
+        type: string
+      last_name:
+        example: Nguyen
+        type: string
+      password:
+        type: string
+      username:
+        example: "0914590038"
+        type: string
+      verify_by:
+        description: confirm by sms or email
+        example: sms
+        type: string
+    required:
+    - username
+    type: object
+  verifier.VerifyRequest:
+    properties:
+      verify_code:
+        example: "1234"
+        type: string
+      verify_id:
+        example: abc31233
+        type: string
+      verify_info:
+        example: email or phone number
+        type: string
+    required:
+    - verify_code
+    - verify_id
+    - verify_info
+    type: object
+info:
+  contact: {}
+paths:
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data request
+        in: body
+        name: request-data
+        required: true
+        schema:
+          $ref: '#/definitions/usermodel.UserCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Verify id
+          schema:
+            type: string
+        "400":
+          description: Invalid request data
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Register user
+      tags:
+      - User
+  /users/verify-registration:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Verify request data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/verifier.VerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User id
+          schema:
+            type: string
+        "400":
+          description: Invalid request data
+          schema:
+            type: string
+        "500":
+          description: Error details
+          schema:
+            type: string
+      summary: Verify registration
+      tags:
+      - User
+swagger: "2.0"

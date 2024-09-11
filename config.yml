@@ -1,0 +1,22 @@
+app:
+  port: "8082" # port of the app
+  gin_mode: "debug" # "release" , "debug"
+  secret_key: "zxcvbnm123qwertyui0987fghj5678lk"
+db:
+  hostname: 127.0.0.1
+  port: 33007
+  username: "root"
+  password: "kien0901"
+  name: "2ndbrand"
+sms:
+  api_key: "your_api_key"
+  username: "your_username"
+  password: "your_password"
+redis:
+  hostname: "localhost"
+  port: "6379"
+rabbitmq:
+  hostname: "localhost"
+  port: "5672"
+  username: "guest"
+  password: "guest"
