@@ -13,13 +13,9 @@ import (
 )
 
 func main() {
-	appConfig := common.NewConfig("./", "config.yml")
+	appConfig := common.NewConfig("./../../config/", "config.dev.yml")
 	appConfig.Load("app", "clickhouse")
-	// dbCnnStr := appConfig.GetDbCnnStr(common.DbClickhouse) // get db connection string
-	// if dbCnnStr == "" {
-	// 	log.Println("Check file [config.yml] :: [db]")
-	// 	return
-	// }
+
 	secretKey := appConfig.GetSecret() // get secret key
 	if secretKey == "" {
 		log.Println("Check file [config.yml] ::[app] [secret_key]")
@@ -29,14 +25,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	// It contains db connection, secret key, app config ...etc
 	appCtx := appctx.NewAppCtx(db, secretKey, appConfig)
-
 	// Create restAPI by GIN
 	r := gin.Default()                // create new gin serve
 	r.Use(middleware.Recover(appCtx)) // recover middleware
-
 	// version api
 	v1 := r.Group("/v1") // create new group
 	// setupUserRoute(appCtx, v1)

@@ -87,28 +87,6 @@ func (c *Config) setEnvByGroup(serviceName ...string) {
 	}
 }
 
-func (c *Config) GetDbCnnStr(dbType string) string {
-	databaseURI := ""
-
-	switch dbType {
-	case DbMysql:
-		databaseURI = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-			os.Getenv(dbType+"_"+DbUsername),
-			os.Getenv(dbType+"_"+DbPassword),
-			os.Getenv(dbType+"_"+DbHost),
-			os.Getenv(dbType+"_"+DbPort),
-			os.Getenv(dbType+"_"+DbName))
-	case DbClickhouse:
-		databaseURI = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-			os.Getenv(DbClickhouse+"_"+DbUsername),
-			os.Getenv(DbClickhouse+"_"+DbPassword),
-			os.Getenv(DbClickhouse+"_"+DbHost),
-			os.Getenv(DbClickhouse+"_"+DbPort),
-			os.Getenv(DbClickhouse+"_"+DbName))
-	}
-	return databaseURI
-}
-
 func (c *Config) LoadDbCnn(dbType string) (*gorm.DB, error) {
 	databaseURI := ""
 	var db *gorm.DB
@@ -129,9 +107,6 @@ func (c *Config) LoadDbCnn(dbType string) (*gorm.DB, error) {
 		}
 
 	case DbClickhouse:
-		// "clickhouse://gorm:gorm@localhost:9942/gorm?dial_timeout=10s&read_timeout=20s"
-		//
-		// dsn := "http://:@localhost:8123/default?dial_=10s&read_timeout=20s"
 		databaseURI = fmt.Sprintf("http://%s:%s@%s:%s/%s?dial_timeout=10s&read_timeout=20s",
 			os.Getenv(dbType+"_"+DbUsername),
 			os.Getenv(dbType+"_"+DbPassword),
