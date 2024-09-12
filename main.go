@@ -71,4 +71,5 @@ func setupReportRoute(appCtx appctx.AppContext, version *gin.RouterGroup) {
 	users := version.Group("/greport")
 	users.GET("/ping", ginreport.Pong(appCtx))
 	users.POST("/ping", ginreport.Pong(appCtx))
+	users.POST("/msglog", ginreport.GetMsgLog(appCtx))
 }

@@ -3,8 +3,8 @@ package reportmodel
 import "time"
 
 type MsgLogReq struct {
-	StartDate  *time.Time `json:"start_date" binding:"required" time_format:"2006-01-02" time_utc:"7"`
-	EndDate    *time.Time `json:"end_date" binding:"required" time_format:"2006-01-02" time_utc:"7"`
+	StartDate  *time.Time `json:"start_date,omitempty"  time_format:"2006-01-02" time_utc:"7"`
+	EndDate    *time.Time `json:"end_date,omitempty"  time_format:"2006-01-02" time_utc:"7"`
 	KeyWord    string     `json:"key_word,omitempty"`
 	Channel    string     `json:"channel,omitempty"`
 	CampaignId string     `json:"campaignId,omitempty"`
@@ -15,4 +15,31 @@ type MsgLogReq struct {
 	Telcos     []string   `json:"telcos,omitempty"`
 	PoIds      []string   `json:"poIds,omitempty"`
 	AppNames   []string   `json:"appNames,omitempty"`
+}
+
+type MsgLogRes struct {
+	MessageId      string `json:"message_id"`
+	ContactId      string `json:"contact_id"`
+	CampaignId     string `json:"campaign_id"`
+	CampaignName   string `json:"campaign_name"`
+	TemplateId     string `json:"template_id"`
+	Channel        string `json:"channel"`
+	App            string `json:"app"`
+	Sender         string `json:"sender"`
+	Recipient      string `json:"recipient"`
+	Telco          string `json:"telco"`
+	SentTime       string `json:"sent_time"`
+	SentStatus     string `json:"sent_status"`
+	DeliveryStatus string `json:"delivery_status"`
+	DeliveryTime   string `json:"delivery_time"`
+	OpenStatus     string `json:"open_status"`
+	ErrorCode      string `json:"error_code"`
+	ErrorMsg       string `json:"error_msg"`
+	MTCount        string `json:"mt_count"`
+	PO             string `json:"po"`
+	IsFallback     string `json:"is_fallback"`
+	MsgBody        string `json:"msg_body"`
+	MsgType        string `json:"msg_type"`
+	MsgOption      string `json:"msg_option"`
+	SentBy         string `json:"sent_by"`
 }
