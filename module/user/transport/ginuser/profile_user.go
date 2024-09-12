@@ -1,8 +1,8 @@
 package ginuser
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/appctx"
+	"greport/common"
+	"greport/component/appctx"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

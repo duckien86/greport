@@ -1,8 +1,8 @@
 package userstorage
 
 import (
-	usermodel "2ndbrand-api/module/user/model"
 	"context"
+	usermodel "greport/module/user/model"
 )
 
 func (store *sqlStore) Update(

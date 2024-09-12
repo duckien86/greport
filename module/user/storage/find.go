@@ -1,9 +1,9 @@
 package userstorage
 
 import (
-	"2ndbrand-api/common"
-	usermodel "2ndbrand-api/module/user/model"
 	"context"
+	"greport/common"
+	usermodel "greport/module/user/model"
 
 	"gorm.io/gorm"
 )

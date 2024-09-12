@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"2ndbrand-api/component/tokenprovider"
+	"greport/component/tokenprovider"
 	"time"
 
 	"github.com/golang-jwt/jwt"

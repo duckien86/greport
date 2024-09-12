@@ -1,9 +1,9 @@
 package main
 
 import (
-	"2ndbrand-api/component/asyncjob"
 	"context"
 	"fmt"
+	"greport/component/asyncjob"
 	"log"
 	"math/rand"
 	"time"

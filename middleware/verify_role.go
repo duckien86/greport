@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/appctx"
 	"errors"
+	"greport/common"
+	"greport/component/appctx"
 
 	"github.com/gin-gonic/gin"
 )

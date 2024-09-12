@@ -1,8 +1,8 @@
 package usermodel
 
 import (
-	"2ndbrand-api/common"
 	"errors"
+	"greport/common"
 )
 
 const StatusActive = 10

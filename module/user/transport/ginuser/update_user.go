@@ -1,12 +1,12 @@
 package ginuser
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/appctx"
-	"2ndbrand-api/component/hasher"
-	userbiz "2ndbrand-api/module/user/biz"
-	usermodel "2ndbrand-api/module/user/model"
-	userstorage "2ndbrand-api/module/user/storage"
+	"greport/common"
+	"greport/component/appctx"
+	"greport/component/hasher"
+	userbiz "greport/module/user/biz"
+	usermodel "greport/module/user/model"
+	userstorage "greport/module/user/storage"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

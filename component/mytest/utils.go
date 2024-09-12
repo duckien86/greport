@@ -1,7 +1,7 @@
 package mytest
 
 import (
-	utils "2ndbrand-api/common"
+	utils "greport/common"
 	"math/rand"
 	"strings"
 )

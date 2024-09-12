@@ -1,8 +1,8 @@
 package userbiz
 
 import (
-	"2ndbrand-api/component/tokenprovider"
 	"context"
+	"greport/component/tokenprovider"
 )
 
 type refreshTokenBiz struct {

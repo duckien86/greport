@@ -1,9 +1,9 @@
 package myredis
 
 import (
-	"2ndbrand-api/common"
 	"errors"
 	"fmt"
+	"greport/common"
 
 	"github.com/redis/go-redis/v9"
 )

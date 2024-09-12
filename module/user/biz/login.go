@@ -1,11 +1,11 @@
 package userbiz
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/tokenprovider"
-	usermodel "2ndbrand-api/module/user/model"
 	"context"
 	"errors"
+	"greport/common"
+	"greport/component/tokenprovider"
+	usermodel "greport/module/user/model"
 )
 
 type LoginStorage interface {

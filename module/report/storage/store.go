@@ -1,4 +1,4 @@
-package restaurantstorage
+package reportstorage
 
 import "gorm.io/gorm"
 

@@ -1,35 +1,31 @@
 package ginuser_test
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/appctx"
-	"2ndbrand-api/component/hasher"
-	userbiz "2ndbrand-api/module/user/biz"
-	usermodel "2ndbrand-api/module/user/model"
-	userstorage "2ndbrand-api/module/user/storage"
 	"context"
+	"greport/common"
+	"greport/component/appctx"
+	"greport/component/hasher"
+	userbiz "greport/module/user/biz"
+	usermodel "greport/module/user/model"
+	userstorage "greport/module/user/storage"
 	"log"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 func initTest() appctx.AppContext {
-	rootPath := "/usr/local/git_source/2ndbrand/2ndbrand-api/"
+	rootPath := "/usr/local/git_source/2ndbrand/greport/"
 	appConfig := common.NewConfig(rootPath, "config.yml")
 	appConfig.Load()
-	dbCnnStr := appConfig.GetDbCnnStr()
-	if dbCnnStr == "" {
-		log.Println("Check file [config.yml] :: [MYSQL_CONN_STRING]")
-	}
-	db, err := gorm.Open(mysql.Open(dbCnnStr), &gorm.Config{})
+	db, err := appConfig.LoadDbCnn(common.DbMysql)
+
 	if err != nil {
 		log.Fatal(err)
 	}
 	return appctx.NewAppCtx(db, appConfig.GetSecret(), appConfig)
 }
+
 func TestRegisterUser(t *testing.T) {
 	appCtx := initTest()
 	db := appCtx.GetMainDbConn() // get main db connection

@@ -1,11 +1,11 @@
 package ginuser
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/appctx"
-	"2ndbrand-api/component/tokenprovider/paseto"
-	userbiz "2ndbrand-api/module/user/biz"
-	usermodel "2ndbrand-api/module/user/model"
+	"greport/common"
+	"greport/component/appctx"
+	"greport/component/tokenprovider/paseto"
+	userbiz "greport/module/user/biz"
+	usermodel "greport/module/user/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

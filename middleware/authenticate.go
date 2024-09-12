@@ -1,12 +1,12 @@
 package middleware
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/appctx"
-	"2ndbrand-api/component/tokenprovider/paseto"
-	usermodel "2ndbrand-api/module/user/model"
-	userstorage "2ndbrand-api/module/user/storage"
 	"errors"
+	"greport/common"
+	"greport/component/appctx"
+	"greport/component/tokenprovider/paseto"
+	usermodel "greport/module/user/model"
+	userstorage "greport/module/user/storage"
 	"strings"
 
 	"github.com/gin-gonic/gin"

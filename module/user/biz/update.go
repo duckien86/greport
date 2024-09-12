@@ -1,10 +1,10 @@
 package userbiz
 
 import (
-	"2ndbrand-api/common"
-	usermodel "2ndbrand-api/module/user/model"
 	"context"
 	"errors"
+	"greport/common"
+	usermodel "greport/module/user/model"
 )
 
 type UpdateUserStore interface {

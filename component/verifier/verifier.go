@@ -1,11 +1,11 @@
 package verifier
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/hasher"
-	"2ndbrand-api/component/myredis"
-	"2ndbrand-api/component/sender"
 	"fmt"
+	"greport/common"
+	"greport/component/hasher"
+	"greport/component/myredis"
+	"greport/component/sender"
 
 	"context"
 	"errors"

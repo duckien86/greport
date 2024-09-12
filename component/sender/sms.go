@@ -1,10 +1,10 @@
 package sender
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/rabbitmq/workqueues"
 	"encoding/json"
 	"errors"
+	"greport/common"
+	"greport/component/rabbitmq/workqueues"
 )
 
 const (

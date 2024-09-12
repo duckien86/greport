@@ -1,11 +1,11 @@
 package verifier
 
 import (
-	"2ndbrand-api/component/myredis"
-	"2ndbrand-api/component/mytest"
 	"context"
 	"encoding/json"
 	"fmt"
+	"greport/component/myredis"
+	"greport/component/mytest"
 	"strings"
 	"testing"
 

@@ -1,11 +1,11 @@
 package userbiz
 
 import (
-	"2ndbrand-api/common"
-	"2ndbrand-api/component/verifier"
-	usermodel "2ndbrand-api/module/user/model"
 	"context"
 	"encoding/json"
+	"greport/common"
+	"greport/component/verifier"
+	usermodel "greport/module/user/model"
 )
 
 const (

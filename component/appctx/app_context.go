@@ -1,7 +1,7 @@
 package appctx
 
 import (
-	"2ndbrand-api/common"
+	"greport/common"
 
 	"gorm.io/gorm"
 )

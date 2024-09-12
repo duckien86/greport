@@ -7,28 +7,33 @@ import (
 	"strings"
 
 	"github.com/spf13/viper"
+	"gorm.io/driver/clickhouse"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 const ( // define key name
+	DbMysql          = "MYSQL"
+	DbClickhouse     = "CLICKHOUSE"
 	AppPort          = "APP_PORT"
 	AppGinMode       = "APP_GIN_MODE"
 	AppSecretKey     = "APP_SECRET_KEY"
-	DbHost           = "DB_HOST"
-	DbPort           = "DB_PORT"
-	DbUsername       = "DB_USERNAME"
-	DbPassword       = "DB_PASSWORD"
-	DbName           = "DB_NAME"
+	DbHost           = "HOSTNAME"
+	DbPort           = "PORT"
+	DbUsername       = "USERNAME"
+	DbPassword       = "PASSWORD"
+	DbName           = "NAME"
 	SmsApiKey        = "SMS_API_KEY"
 	SmsUsername      = "SMS_USERNAME"
 	SmsPassword      = "SMS_PASSWORD"
-	RedisHost        = "REDIS_HOST"
-	RedisUsername    = "REDIS_USERNAME"
-	RedisPassword    = "REDIS_PASSWORD"
-	RedisPort        = "REDIS_PORT"
-	RabbitmqHost     = "RABBITMQ_HOST"
-	RabbitmqPort     = "RABBITMQ_PORT"
-	RabbitmqUsername = "RABBITMQ_USERNAME"
-	RabbitmqPassword = "RABBITMQ_PASSWORD"
+	RedisHost        = "HOST"
+	RedisUsername    = "USERNAME"
+	RedisPassword    = "PASSWORD"
+	RedisPort        = "PORT"
+	RabbitmqHost     = "HOST"
+	RabbitmqPort     = "PORT"
+	RabbitmqUsername = "USERNAME"
+	RabbitmqPassword = "PASSWORD"
 )
 
 const (
@@ -48,7 +53,7 @@ func NewConfig(dirPath, fileName string) *Config {
 	}
 }
 
-func (c *Config) Load() {
+func (c *Config) Load(serviceName ...string) {
 	viper.SetConfigFile(c.dirPath + c.fileName)
 	// viper.AddConfigPath(filepath)
 	// viper.AutomaticEnv()
@@ -58,17 +63,17 @@ func (c *Config) Load() {
 		fmt.Println("Error reading config file:", err)
 		return
 	}
-	c.setEnvByGroup("app", "db", "sms")
+	c.setEnvByGroup(serviceName...)
 }
 
 // Scan config.yml file and set to environment variable
-func (c *Config) setEnvByGroup(groupName ...string) {
-	if len(groupName) < 1 {
-		fmt.Println("Error reading  @ ", groupName)
+func (c *Config) setEnvByGroup(serviceName ...string) {
+	if len(serviceName) < 1 {
+		fmt.Println("Error reading  @ ", serviceName)
 		return
 	}
-	// Lấy giá trị cấu hình
-	for _, name := range groupName {
+	// Lấy giá trị cấu hình của service
+	for _, name := range serviceName {
 		configs := viper.GetStringMapString(name)
 		for k, v := range configs {
 			k = strings.ToUpper(name + "_" + k)
@@ -82,15 +87,72 @@ func (c *Config) setEnvByGroup(groupName ...string) {
 	}
 }
 
-func (c *Config) GetDbCnnStr() string {
-	databaseURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		os.Getenv(DbUsername),
-		os.Getenv(DbPassword),
-		os.Getenv(DbHost),
-		os.Getenv(DbPort),
-		os.Getenv(DbName))
+func (c *Config) GetDbCnnStr(dbType string) string {
+	databaseURI := ""
 
+	switch dbType {
+	case DbMysql:
+		databaseURI = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+			os.Getenv(dbType+"_"+DbUsername),
+			os.Getenv(dbType+"_"+DbPassword),
+			os.Getenv(dbType+"_"+DbHost),
+			os.Getenv(dbType+"_"+DbPort),
+			os.Getenv(dbType+"_"+DbName))
+	case DbClickhouse:
+		databaseURI = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+			os.Getenv(DbClickhouse+"_"+DbUsername),
+			os.Getenv(DbClickhouse+"_"+DbPassword),
+			os.Getenv(DbClickhouse+"_"+DbHost),
+			os.Getenv(DbClickhouse+"_"+DbPort),
+			os.Getenv(DbClickhouse+"_"+DbName))
+	}
 	return databaseURI
+}
+
+func (c *Config) LoadDbCnn(dbType string) (*gorm.DB, error) {
+	databaseURI := ""
+	var db *gorm.DB
+	var err error
+	switch dbType {
+	case DbMysql:
+		dbType = strings.ToUpper(dbType)
+		databaseURI = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+			os.Getenv(dbType+"_"+DbUsername),
+			os.Getenv(dbType+"_"+DbPassword),
+			os.Getenv(dbType+"_"+DbHost),
+			os.Getenv(dbType+"_"+DbPort),
+			os.Getenv(dbType+"_"+DbName))
+
+		if db, err = gorm.Open(mysql.Open(databaseURI), &gorm.Config{}); err != nil {
+			log.Print(databaseURI)
+			log.Fatal(err)
+		}
+
+	case DbClickhouse:
+		// "clickhouse://gorm:gorm@localhost:9942/gorm?dial_timeout=10s&read_timeout=20s"
+		//
+		// dsn := "http://:@localhost:8123/default?dial_=10s&read_timeout=20s"
+		databaseURI = fmt.Sprintf("http://%s:%s@%s:%s/%s?dial_timeout=10s&read_timeout=20s",
+			os.Getenv(dbType+"_"+DbUsername),
+			os.Getenv(dbType+"_"+DbPassword),
+			os.Getenv(dbType+"_"+DbHost),
+			os.Getenv(dbType+"_"+DbPort),
+			os.Getenv(dbType+"_"+DbName))
+
+		if db, err = gorm.Open(clickhouse.Open(databaseURI), &gorm.Config{}); err != nil {
+			// if db, err = gorm.Open(clickhouse.Open(databaseURI), &gorm.Config{}); err != nil {
+			log.Print(databaseURI)
+			log.Fatal(err)
+		}
+
+	}
+
+	if c.IsDebugMode() { // set debug mode
+		db = db.Debug()
+	}
+	log.Printf("%s DB connected \n %s", dbType, databaseURI)
+
+	return db, nil
 }
 
 func (c *Config) GetAppPort() string {

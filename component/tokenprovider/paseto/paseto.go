@@ -1,10 +1,10 @@
 package paseto
 
 import (
-	"2ndbrand-api/component/myredis"
-	"2ndbrand-api/component/tokenprovider"
 	"context"
 	"errors"
+	"greport/component/myredis"
+	"greport/component/tokenprovider"
 	"time"
 
 	"github.com/aead/chacha20poly1305"
