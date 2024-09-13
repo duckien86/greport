@@ -21,7 +21,7 @@ func main() {
 		log.Println("Check file [config.yml] ::[app] [secret_key]")
 		return
 	}
-	db, err := appConfig.LoadDbCnn(common.DbClickhouse)
+	db, err := common.LoadDbCnn(common.DbClickhouse, appConfig.IsDebugMode())
 	if err != nil {
 		log.Fatal(err)
 	}
