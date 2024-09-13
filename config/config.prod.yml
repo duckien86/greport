@@ -2,6 +2,12 @@ app:
   port: "8087" # port of the app
   gin_mode: "debug" # "release" , "debug"
   secret_key: "zxcvbnm123qwertyui0987fghj5678lk"
+clickhouse:
+  hostname: "192.168.90.8"
+  port: 30546
+  username: "admin"
+  password: "123465"
+  name: "gapone"
 mysql:
   hostname: 127.0.0.1
   port: 33007
@@ -20,9 +26,3 @@ rabbitmq:
   port: "5672"
   username: "guest"
   password: "guest"
-clickhouse:
-  hostname: "192.168.90.8"
-  port: 30546
-  username: "admin"
-  password: "123465"
-  name: "gapone"

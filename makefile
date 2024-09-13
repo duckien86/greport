@@ -1,4 +1,9 @@
+# declare 
 PROJECT_NAME = greport-api
+MAIN_PATH = ./cmd/api
+BUILD_PATH = ./.build
+CONFIG_PATH = ./config
+
 dku:
 	docker-compose up -d
 
@@ -6,17 +11,18 @@ dkd:
 	docker-compose down
 
 build:
-	rm -rf  ./.build/
-	mkdir  ./.build
-	cp config.yml ./.build/
-	go build -o ./.build/$(PROJECT_NAME) 
-	rm -f  ./.build/config.yml
+	rm -rf  $(BUILD_PATH)
+	mkdir  $(BUILD_PATH)
+	cp $(CONFIG_PATH)/* $(BUILD_PATH)
+	go build -o $(BUILD_PATH)/$(PROJECT_NAME) $(MAIN_PATH)
+	rm -f  $(BUILD_PATH)/config.*
 
 run:
-	./.build/$(PROJECT_NAME)
+    # EXPORT 
+	$(BUILD_PATH)/$(PROJECT_NAME)
 
 run-d:
-	nohup ./.build/$(PROJECT_NAME) > $(PROJECT_NAME).log 2>&1 &
+	nohup $(BUILD_PATH)/$(PROJECT_NAME) > $(PROJECT_NAME).log 2>&1 &
 
 .app: build run
 

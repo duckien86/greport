@@ -6,7 +6,6 @@ import (
 	reportbiz "greport/module/report/biz"
 	reportmodel "greport/module/report/model"
 	reportstorage "greport/module/report/storage"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +28,6 @@ func GetMsgLog(appctx appctx.AppContext) gin.HandlerFunc {
 		// tokeProvider := jwt.NewTokenJwtProvider(appCtx.GetSecretKey())
 		biz := reportbiz.NewReportBiz(store)
 		data, err := biz.GetMsgLog(ctx.Request.Context(), reqData)
-		log.Print(data)
 		if err != nil {
 			panic(err)
 		}

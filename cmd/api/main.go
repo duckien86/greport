@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	appConfig := common.NewConfig("./../../config/", "config.dev.yml")
+	appConfig := common.NewConfig("./config/", "config.dev.yml")
 	appConfig.Load("app", "clickhouse")
 
 	secretKey := appConfig.GetSecret() // get secret key
