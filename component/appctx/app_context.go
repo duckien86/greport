@@ -19,6 +19,7 @@ type appCtx struct {
 	appConfig *common.Config
 }
 
+// App contains db connection, secret key, app config ...etc
 func NewAppCtx(db *gorm.DB, secretKey string, appConfig *common.Config) *appCtx {
 	return &appCtx{
 		db:        db,

@@ -16,14 +16,14 @@ import (
 
 func initTest() appctx.AppContext {
 	rootPath := "/usr/local/git_source/2ndbrand/greport/"
-	appConfig := common.NewConfig(rootPath, "config.yml")
-	appConfig.Load()
-	db, err := appConfig.LoadDbCnn(common.DbMysql)
+	appConf := common.NewConfig(rootPath, "config.yml")
+	appConf.Load()
+	db, err := common.LoadDbCnn(common.DbMysql, appConf.IsDebugMode())
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	return appctx.NewAppCtx(db, appConfig.GetSecret(), appConfig)
+	return appctx.NewAppCtx(db, appConf.GetSecret(), appConf)
 }
 
 func TestRegisterUser(t *testing.T) {
