@@ -1,11 +1,13 @@
 package reportstorage
 
-import "gorm.io/gorm"
+import (
+	"github.com/ClickHouse/clickhouse-go/v2"
+)
 
 type sqlStore struct {
-	db *gorm.DB
+	db clickhouse.Conn
 }
 
-func NewSQLStore(db *gorm.DB) *sqlStore {
+func NewSQLStore(db clickhouse.Conn) *sqlStore {
 	return &sqlStore{db: db}
 }

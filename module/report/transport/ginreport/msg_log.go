@@ -19,7 +19,7 @@ func Pong(appctx appctx.AppContext) gin.HandlerFunc {
 
 func GetMsgLog(appctx appctx.AppContext) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		db := appctx.GetMainDbConn()
+		db := appctx.GetClickHouseConn()
 		var reqData reportmodel.MsgLogReq
 		if err := ctx.ShouldBind(&reqData); err != nil {
 			panic(common.ErrInvalidRequest(err))
