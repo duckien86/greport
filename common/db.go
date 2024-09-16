@@ -1,11 +1,11 @@
 package common
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"gorm.io/driver/mysql"
@@ -57,15 +57,20 @@ func GetClickHouseCnn(IsDebugMode bool) (clickhouse.Conn, error) {
 			Username: os.Getenv(dbType + "_" + DbUsername),
 			Password: os.Getenv(dbType + "_" + DbPassword),
 		},
-		// TLS:              &tls.Config{},
-		Protocol:         clickhouse.HTTP,
-		DialTimeout:      time.Second * 300,
-		ConnMaxLifetime:  time.Duration(10) * time.Minute,
-		ConnOpenStrategy: clickhouse.ConnOpenInOrder,
+		Protocol: clickhouse.Native,
+		// DialTimeout:      5 * time.Second,
+		// ConnMaxLifetime:  time.Hour,
+		// ConnOpenStrategy: clickhouse.ConnOpenRoundRobin,
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	ctx := context.Background()
+	if err := conn.Ping(ctx); err != nil {
+		if exception, ok := err.(*clickhouse.Exception); ok {
+			fmt.Printf("Exception [%d] %s \n%s\n", exception.Code, exception.Message, exception.StackTrace)
+		}
+		return nil, err
+	}
 	return conn, nil
 }

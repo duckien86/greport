@@ -4,7 +4,7 @@ app:
   secret_key: "zxcvbnm123qwertyui0987fghj5678lk"
 clickhouse:
   hostname: "192.168.90.8"
-  port: 30546
+  port: 32511
   username: "admin"
   password: "123465"
   name: "gapone"

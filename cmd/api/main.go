@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fmt"
 	"greport/common"
 	"greport/component/appctx"
 	"log"
@@ -10,7 +11,7 @@ import (
 )
 
 func main() {
-	appConfig := common.NewConfig("./../../config/", "config.dev.yml")
+	appConfig := common.NewConfig("./config/", "config.dev.yml")
 	// appConfig := common.NewConfig("./config/", "config.dev.yml")
 	appConfig.Load("app", "clickhouse")
 
@@ -19,9 +20,12 @@ func main() {
 		log.Println("Check file [config.yml] ::[app] [secret_key]")
 		return
 	}
-	chCnn, err := common.GetClickHouseCnn(appConfig.IsDebugMode()) // Load db connection
+	chCnn, err := common.GetClickHouseCnn(appConfig.IsDebugMode()) // Get clickhouse connection
 	if err != nil {
-		log.Fatal(err)
+		// log.Printf("fail to connect %w", err)
+		wrappedErr := fmt.Errorf("connect DB fail %w", err)
+		fmt.Println(wrappedErr)
+		log.Fatal("Exit")
 	}
 	appCtx := appctx.NewAppCtx(nil, chCnn, secretKey, appConfig) // create app context
 	server := gin.Default()                                      // create new gin serve
