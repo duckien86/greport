@@ -2,24 +2,41 @@ package reportstorage
 
 import (
 	"context"
+	"fmt"
+	"greport/common"
 	reportmodel "greport/module/report/model"
+	"log"
+
+	sq "github.com/Masterminds/squirrel"
 )
 
-func (s *sqlStore) FindAll(context context.Context, condition reportmodel.MsgLogRequest, moreKeys ...string) (*[]reportmodel.MsgLogResponse, error) {
+func (s *sqlStore) FindAll(context context.Context, filter *reportmodel.MsgLogFilter, paging *common.Paging, moreKeys ...string) (*[]reportmodel.MsgLogResponse, error) {
 	var returnData []reportmodel.MsgLogResponse
-	sqlCmd := `SELECT 
-					message_id   MessageId,
-					campaign_id   CampaignId,
-					channel   Channel,
-					template_id   TemplateId,
-					time_sent   TimeSent 
-				FROM 
-					msg_log_agg_v4 
-				WHERE 
-					channel = $1
-				LIMIT $2`
+	sqlCmd := sq.
+		Select(
+			"message_id  AS MessageId",
+			"campaign_id AS  CampaignId",
+			"channel AS  Channel",
+			"template_id  AS TemplateId",
+			"time_sent AS  TimeSent",
+		).From("msg_log_agg_v4")
 
-	rows, err := s.db.Query(context, sqlCmd, "sms", 1)
+	if filter.Channel != "" {
+		// @TODO: Phương án tạm thời này sẽ bị sql injection
+		sqlCmd = sqlCmd.Where(fmt.Sprintf("channel = '%s' ", filter.Channel))
+	}
+
+	sqlCmd = sqlCmd.Limit(uint64(paging.Limit))
+	sqlStr, params, err := sqlCmd.ToSql()
+
+	if err != nil {
+		return nil, fmt.Errorf("sql builder -> %w", err)
+	}
+	log.Println(params)
+	log.Println(sqlStr)
+
+	rows, err := s.db.Query(context, sqlStr)
+
 	if err != nil {
 		return nil, err
 	}

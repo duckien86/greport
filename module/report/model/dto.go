@@ -2,7 +2,7 @@ package reportmodel
 
 import "time"
 
-type MsgLogRequest struct {
+type MsgLogFilter struct {
 	StartDate  string   `json:"start_date" validate:"required,datetime=2006-01-02"  `
 	EndDate    string   `json:"end_date" validate:"required,datetime=2006-01-02" `
 	KeyWord    string   `json:"key_word,omitempty"`

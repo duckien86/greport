@@ -2,11 +2,15 @@ package reportbiz
 
 import (
 	"context"
+	"greport/common"
 	reportmodel "greport/module/report/model"
 )
 
 type ReportStorageInterface interface {
-	FindAll(context context.Context, condition reportmodel.MsgLogRequest, moreKeys ...string) (*[]reportmodel.MsgLogResponse, error)
+	FindAll(context context.Context,
+		filter *reportmodel.MsgLogFilter,
+		paging *common.Paging,
+		moreKeys ...string) (*[]reportmodel.MsgLogResponse, error)
 }
 
 type reportBiz struct {
@@ -20,8 +24,8 @@ func NewReportBiz(store ReportStorageInterface) *reportBiz {
 }
 
 // GetMsgLog: Do msg log biz
-func (rb *reportBiz) GetMsgLog(ctx context.Context, reqData reportmodel.MsgLogRequest) (*[]reportmodel.MsgLogResponse, error) {
-	data, err := rb.store.FindAll(ctx, reqData)
+func (rb *reportBiz) GetMsgLog(ctx context.Context, filter *reportmodel.MsgLogFilter, paging *common.Paging) (*[]reportmodel.MsgLogResponse, error) {
+	data, err := rb.store.FindAll(ctx, filter, paging)
 	if err != nil {
 		return nil, err
 	}
