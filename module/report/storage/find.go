@@ -5,17 +5,25 @@ import (
 	reportmodel "greport/module/report/model"
 )
 
-func (s *sqlStore) FindAll(context context.Context, condition reportmodel.MsgLogReq, moreKeys ...string) (*[]reportmodel.MsgLogRes, error) {
-	var returnData []reportmodel.MsgLogRes
-	sqlCmd := "select message_id MessageId, campaign_id CampaignId, channel Channel, template_id TemplateId, time_sent TimeSent "
-	sqlCmd += "from msg_log_agg_v4 "
-	sqlCmd += "where channel=?"
-	sqlCmd += "limit 100"
-	rows, err := s.db.Query(context, sqlCmd, "sms")
+func (s *sqlStore) FindAll(context context.Context, condition reportmodel.MsgLogRequest, moreKeys ...string) (*[]reportmodel.MsgLogResponse, error) {
+	var returnData []reportmodel.MsgLogResponse
+	sqlCmd := `SELECT 
+					message_id   MessageId,
+					campaign_id   CampaignId,
+					channel   Channel,
+					template_id   TemplateId,
+					time_sent   TimeSent 
+				FROM 
+					msg_log_agg_v4 
+				WHERE 
+					channel = $1
+				LIMIT $2`
+
+	rows, err := s.db.Query(context, sqlCmd, "sms", 1)
 	if err != nil {
 		return nil, err
 	}
-	var row reportmodel.MsgLogRes
+	var row reportmodel.MsgLogResponse
 
 	for rows.Next() {
 		if err := rows.ScanStruct(&row); err != nil {
@@ -24,7 +32,6 @@ func (s *sqlStore) FindAll(context context.Context, condition reportmodel.MsgLog
 		returnData = append(returnData, row)
 	}
 	rows.Close()
-	// defer s.db.Close()
 	return &returnData, nil
 }
 

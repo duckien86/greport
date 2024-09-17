@@ -3,7 +3,7 @@ package main
 import (
 	"greport/component/appctx"
 	"greport/middleware"
-	"greport/module/report/transport/ginreport"
+	reportcontroller "greport/module/report/controller"
 	"greport/module/user/transport/ginuser"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +15,7 @@ type route struct {
 	appCtx  appctx.AppContext
 }
 
+// NewRoute : create new route
 func NewRoute(verName string, server *gin.Engine, appCtx appctx.AppContext) *route {
 	server.Use(middleware.Recover(appCtx)) // apply recover middleware
 	return &route{
@@ -24,12 +25,12 @@ func NewRoute(verName string, server *gin.Engine, appCtx appctx.AppContext) *rou
 	}
 }
 
-// Setup report module route
+// AddReport: Setup report module route
 func (r *route) AddReport() {
 	users := r.version.Group("/greport")
-	users.GET("/ping", ginreport.Pong(r.appCtx))
-	users.POST("/ping", ginreport.Pong(r.appCtx))
-	users.POST("/msglog", ginreport.GetMsgLog(r.appCtx))
+	users.GET("/ping", reportcontroller.Pong(r.appCtx))
+	users.POST("/ping", reportcontroller.Pong(r.appCtx))
+	users.POST("/msglog", reportcontroller.GetMsgLog(r.appCtx))
 }
 
 // Setup user module route

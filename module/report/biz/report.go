@@ -5,24 +5,23 @@ import (
 	reportmodel "greport/module/report/model"
 )
 
-type ReportStorage interface {
-	FindAll(context context.Context, condition reportmodel.MsgLogReq, moreKeys ...string) (*[]reportmodel.MsgLogRes, error)
+type ReportStorageInterface interface {
+	FindAll(context context.Context, condition reportmodel.MsgLogRequest, moreKeys ...string) (*[]reportmodel.MsgLogResponse, error)
 }
 
 type reportBiz struct {
-	store ReportStorage
+	store ReportStorageInterface
 }
 
-func NewReportBiz(store ReportStorage) *reportBiz {
+func NewReportBiz(store ReportStorageInterface) *reportBiz {
 	return &reportBiz{
 		store: store,
 	}
 }
 
-// func (biz *loginBiz) Login(ctx context.Context, data *usermodel.UserLogin) (*tokenprovider.Token, error) {
-
-func (r *reportBiz) GetMsgLog(ctx context.Context, reqData reportmodel.MsgLogReq) (*[]reportmodel.MsgLogRes, error) {
-	data, err := r.store.FindAll(ctx, reqData)
+// GetMsgLog: Do msg log biz
+func (rb *reportBiz) GetMsgLog(ctx context.Context, reqData reportmodel.MsgLogRequest) (*[]reportmodel.MsgLogResponse, error) {
+	data, err := rb.store.FindAll(ctx, reqData)
 	if err != nil {
 		return nil, err
 	}
