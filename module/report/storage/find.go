@@ -12,7 +12,7 @@ import (
 
 func (s *sqlStore) FindAll(context context.Context, filter *reportmodel.MsgLogFilter, paging *common.Paging, moreKeys ...string) (*[]reportmodel.MsgLogResponse, error) {
 	var returnData []reportmodel.MsgLogResponse
-	sqlCmd := sq.
+	qrDetails := sq.
 		Select(
 			"message_id  AS MessageId",
 			"campaign_id AS  CampaignId",
@@ -21,27 +21,29 @@ func (s *sqlStore) FindAll(context context.Context, filter *reportmodel.MsgLogFi
 			"time_sent AS  TimeSent",
 		).From("msg_log_agg_v4")
 
+	queryTotal := sq.Select("COUNT(*) AS total").From("msg_log_agg_v4")
+
 	if filter.Channel != "" {
 		// @TODO: Phương án tạm thời này sẽ bị sql injection
-		sqlCmd = sqlCmd.Where(fmt.Sprintf("channel = '%s' ", filter.Channel))
+		qrDetails = qrDetails.Where(fmt.Sprintf("channel = '%s' ", filter.Channel))
+		queryTotal = queryTotal.Where(fmt.Sprintf("channel = '%s' ", filter.Channel))
+	}
+	qrDetails = qrDetails.Offset(uint64(paging.GetOffset()))
+	qrDetails = qrDetails.Limit(uint64(paging.Limit))
+	sqlStr, params := qrDetails.MustSql()
+	log.Println(sqlStr, params)
+	// Count total
+	sqlStrTotal, _ := queryTotal.MustSql()
+	if err := s.db.QueryRow(context, sqlStrTotal).Scan(&paging.Total); err != nil {
+		return nil, fmt.Errorf("[Query total] -> %w", err)
 	}
 
-	sqlCmd = sqlCmd.Limit(uint64(paging.Limit))
-	sqlStr, params, err := sqlCmd.ToSql()
-
-	if err != nil {
-		return nil, fmt.Errorf("sql builder -> %w", err)
-	}
-	log.Println(params)
-	log.Println(sqlStr)
-
+	// Get details
 	rows, err := s.db.Query(context, sqlStr)
-
 	if err != nil {
 		return nil, err
 	}
 	var row reportmodel.MsgLogResponse
-
 	for rows.Next() {
 		if err := rows.ScanStruct(&row); err != nil {
 			return nil, err

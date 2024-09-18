@@ -23,8 +23,8 @@ func NewReportBiz(store ReportStorageInterface) *reportBiz {
 	}
 }
 
-// GetMsgLog: Do msg log biz
-func (rb *reportBiz) GetMsgLog(ctx context.Context, filter *reportmodel.MsgLogFilter, paging *common.Paging) (*[]reportmodel.MsgLogResponse, error) {
+// GetMsgLogDetails: Do msglog biz
+func (rb *reportBiz) GetMsgLogDetails(ctx context.Context, filter *reportmodel.MsgLogFilter, paging *common.Paging) (*[]reportmodel.MsgLogResponse, error) {
 	data, err := rb.store.FindAll(ctx, filter, paging)
 	if err != nil {
 		return nil, err

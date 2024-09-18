@@ -12,36 +12,38 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Pong: Test api connect
 func Pong(appctx appctx.AppContext) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, common.SimpleSuccessRes("pong"))
 	}
 }
 
+// GetMsgLog: handler MsgLog request
 func GetMsgLog(appctx appctx.AppContext) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var reqData reportmodel.MsgLogFilter
+		var filter reportmodel.MsgLogFilter
 		var paging common.Paging
 		dbConn := appctx.GetClickHouseConn()
 
-		if err := ctx.ShouldBind(&reqData); err != nil {
+		if err := ctx.ShouldBind(&filter); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 		if err := ctx.ShouldBindQuery(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 		paging.Fulfill()
-		if details, err := common.ValidateStruct(reqData); err != nil {
+		if details, err := common.ValidateStruct(filter); err != nil {
 			panic(common.ErrValidationData(err, details))
 		}
-		log.Println(reqData)
+		log.Println(filter)
 		store := reportstorage.NewSQLStore(dbConn)
 		biz := reportbiz.NewReportBiz(store)
-		data, err := biz.GetMsgLog(ctx.Request.Context(), &reqData, &paging)
+		data, err := biz.GetMsgLogDetails(ctx.Request.Context(), &filter, &paging)
 		if err != nil {
 			panic(err)
 		}
-		ctx.JSON(http.StatusOK, common.NewSuccessRes(data, nil, nil))
+		ctx.JSON(http.StatusOK, common.NewSuccessRes(data, paging, filter))
 
 	}
 }

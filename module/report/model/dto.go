@@ -3,18 +3,18 @@ package reportmodel
 import "time"
 
 type MsgLogFilter struct {
-	StartDate  string   `json:"start_date" validate:"required,datetime=2006-01-02"  `
-	EndDate    string   `json:"end_date" validate:"required,datetime=2006-01-02" `
-	KeyWord    string   `json:"key_word,omitempty"`
-	Channel    string   `json:"channel,omitempty"`
-	CampaignId string   `json:"campaignId,omitempty"`
-	TemplateId string   `json:"template_id,omitempty"`
-	Sender     string   `json:"sender,omitempty"`
-	Recipient  string   `json:"recipient,omitempty"`
-	MsgId      string   `json:"msg_id,omitempty"`
-	Telcos     []string `json:"telcos,omitempty"`
-	PoIds      []string `json:"poIds,omitempty"`
-	AppNames   []string `json:"appNames,omitempty"`
+	StartDate  string   `json:"start_date" validate:"required,datetime=2006-01-02" form:"start_date"`
+	EndDate    string   `json:"end_date" validate:"required,datetime=2006-01-02" form:"end_date"`
+	KeyWord    string   `json:"key_word" validate:"omitempty,alphanum" form:"key_word"`
+	Channel    string   `json:"channel" validate:"omitempty,alphanum" form:"channel"`
+	CampaignId string   `json:"campaignId" validate:"omitempty,alphanum" form:"campaign_id"`
+	TemplateId string   `json:"template_id" validate:"omitempty,alphanum" form:"template_id"`
+	Sender     string   `json:"sender" validate:"omitempty,alphanum" form:"sender"`
+	Recipient  string   `json:"recipient" validate:"omitempty,alphanum" form:"recipient"`
+	MsgId      string   `json:"msg_id" validate:"omitempty,alphanum" form:"msg_id"`
+	Telcos     []string `json:"telcos" validate:"omitempty,dive,alphanum" form:"telcos"`
+	PoIds      []string `json:"poIds" validate:"omitempty,dive,alphanum" form:"po_ids"`
+	AppNames   []string `json:"appNames" validate:"omitempty,dive,alphanum" form:"app_names"`
 }
 
 type MsgLogResponse struct {

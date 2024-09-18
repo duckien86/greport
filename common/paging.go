@@ -3,9 +3,9 @@ package common
 import "strings"
 
 type Paging struct {
-	Page  int   `json:"page" form:"page"`
-	Limit int   `json:"limit" form:"limit"`
-	Total int64 `json:"total" form:"total"`
+	Page  int    `json:"page" form:"page"`
+	Limit int    `json:"limit" form:"limit"`
+	Total uint64 `json:"total" form:"total"`
 	// support cursor with UID
 	FakeCursor string `json:"cursor" form:"cursor"`
 	NextCursor string `json:"next_cursor" `
@@ -20,4 +20,13 @@ func (p *Paging) Fulfill() {
 		p.Limit = 50
 	}
 	p.FakeCursor = strings.TrimSpace(p.FakeCursor)
+}
+
+func (p *Paging) GetOffset() int {
+	offset := 0
+	if p.Page == 1 {
+		return offset
+	}
+	offset = (p.Page - 1) * p.Limit
+	return offset
 }
