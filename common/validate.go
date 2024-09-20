@@ -22,9 +22,11 @@ func ValidateStruct(data interface{}) (interface{}, error) {
 		for _, err := range err.(validator.ValidationErrors) {
 			fieldName := strings.ToLower(err.Field())
 			if len(err.Param()) > 0 {
-				details[fieldName] = fmt.Sprintf("%s must be %s (%s)", fieldName, err.Tag(), err.Param())
+				details[fieldName] = fmt.Sprintf("%s must be %s (%s)",
+					fieldName, err.Tag(), err.Param())
 			} else {
-				details[fieldName] = fmt.Sprintf("%s must be %s %s", fieldName, err.Tag(), err.Param())
+				details[fieldName] = fmt.Sprintf("%s must be %s %s",
+					fieldName, err.Tag(), err.Param())
 			}
 		}
 	}

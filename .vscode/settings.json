@@ -1,3 +1,4 @@
 {
-   "editor.fontFamily": "MesloLGM Nerd Font , monospace"
+   "editor.fontFamily": " Cascadia Code, MesloLGL Nerd Font Mono, MesloLGS NF Regular, Consolas",
+   "terminal.integrated.fontFamily": " Cascadia Code, MesloLGL Nerd Font Mono, MesloLGS NF Regular, Consolas"
 }

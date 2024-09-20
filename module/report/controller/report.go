@@ -1,6 +1,7 @@
 package reportcontroller
 
 import (
+	"fmt"
 	"greport/common"
 	"greport/component/appctx"
 	reportbiz "greport/module/report/biz"
@@ -24,7 +25,15 @@ func GetMsgLog(appctx appctx.AppContext) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var filter reportmodel.MsgLogFilter
 		var paging common.Paging
-		dbConn := appctx.GetClickHouseConn()
+		// dbConn := appctx.GetClickHouseConn()
+		dbConn, err := common.GetClickHouseCnn(appctx.GetAppConfig().IsDebugMode()) // Get clickhouse connection
+		if err != nil {
+			// log.Printf("fail to connect %w", err)
+			wrappedErr := fmt.Errorf("connect DB fail %w", err)
+			fmt.Println(wrappedErr)
+			log.Fatal("Exit")
+		}
+		defer dbConn.Close() // close
 
 		if err := ctx.ShouldBind(&filter); err != nil {
 			panic(common.ErrInvalidRequest(err))
